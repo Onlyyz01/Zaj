@@ -29,14 +29,16 @@
       align-items: center;
       text-align: center;
       padding: 20px;
+      position: relative;
     }
 
-    img {
+    img.main-gif {
       max-width: 90%;
       max-height: 40vh;
       height: auto;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1;
     }
 
     h1 {
@@ -56,6 +58,7 @@
       overflow: hidden;
       border-right: 2px solid #333;
       animation: blinkCursor 0.8s infinite;
+      z-index: 1;
     }
 
     @keyframes fadeIn {
@@ -68,15 +71,42 @@
       50% { border-color: #333; }
       100% { border-color: transparent; }
     }
+
+    #finalGif {
+      display: none;
+      margin-top: 20px;
+      max-width: 80%;
+      height: auto;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      z-index: 1;
+    }
+
+    .emoji {
+      position: absolute;
+      bottom: -40px;
+      font-size: 2rem;
+      opacity: 0;
+      animation: floatUp 3s linear forwards;
+      z-index: 0;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 0.7; }
+      100% { transform: translateY(-100vh); opacity: 0; }
+    }
   </style>
 </head>
 <body>
-  <img src="https://media1.tenor.com/m/NqpgfoS_83gAAAAC/mochi-mochimochi.gif" alt="Sorry GIF" />
+  <img class="main-gif" src="https://media1.tenor.com/m/NqpgfoS_83gAAAAC/mochi-mochimochi.gif" alt="Sorry GIF" />
   <h1>Babi, sorry na po</h1>
   <div id="typewriter"></div>
+  <img id="finalGif" src="https://media.tenor.com/p96XUHeS4q8AAAAi/peach-and-goma-goma.gif" alt="Cute Ending" />
 
   <script>
     const sentences = [
+      "This may sound and look cringe po",
+      "This website intends to make an apology po... Sorryy..",
       "Baby love hwuehuwewh, bati na po tayo please :((",
       "Nag jojoke lng nman po ako love love",
       "Hindi ko intensyon na mag tampo ikaw po",
@@ -96,10 +126,10 @@
       "U're always prettier than anybody babiii",
       "Please bati na tayo po :((",
       "MWAAAA sorry babi",
-      // Add more 💌 here
     ];
 
     const typewriterEl = document.getElementById('typewriter');
+    const finalGif = document.getElementById('finalGif');
     let currentSentence = 0;
 
     function typeSentence(sentence, callback) {
@@ -125,7 +155,46 @@
           currentSentence++;
           playTypewriter();
         });
+      } else {
+        showFinalScene();
       }
+    }
+
+    function showFinalScene() {
+      finalGif.style.display = 'block';
+      setTimeout(() => {
+        finalGif.style.opacity = 1;
+        startEmojiRain();
+      }, 500);
+    }
+
+    function startEmojiRain() {
+      const emojis = ["😓", "😭", "😢", "🥹", "🙏"];
+      const body = document.body;
+
+      for (let i = 0; i < 40; i++) {
+        const emoji = document.createElement('div');
+        emoji.classList.add('emoji');
+        emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = `${Math.random() * 100}%`;
+        emoji.style.fontSize = `${1.5 + Math.random() * 2}rem`;
+        emoji.style.animationDuration = `${2 + Math.random() * 2}s`;
+        body.appendChild(emoji);
+
+        setTimeout(() => emoji.remove(), 4000);
+      }
+
+      // Keep making emoji rain every 2s
+      setInterval(() => {
+        const emoji = document.createElement('div');
+        emoji.classList.add('emoji');
+        emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = `${Math.random() * 100}%`;
+        emoji.style.fontSize = `${1.5 + Math.random() * 2}rem`;
+        emoji.style.animationDuration = `${2 + Math.random() * 2}s`;
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 4000);
+      }, 300);
     }
 
     // Start typing after 4 seconds
